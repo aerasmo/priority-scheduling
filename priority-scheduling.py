@@ -39,11 +39,12 @@ while finished_jobs < n:
             if job[7] == job[3]:
                 job[5] = finish_time
                 job[6] = job[4] - job[2]
+                finished_jobs += 1
+                
             current_time = finish_time
 
 
             gantt.append([job[0], start_time, finish_time])
-            finished_jobs += 1
     jobs.sort(key=lambda job: (job[2], job[1]))
 
 def print_table():
