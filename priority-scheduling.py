@@ -2,31 +2,33 @@ import random
 
 jobs = []
 gantt = []
-# random.seed(17)
+
+# ranomized jobs
+random.seed(17)
 # no. of jobs
-# n = random.randint(3,6)
+n = random.randint(3,6)
 
-""" # initialize jobs
-# for i in range(n):
-#     process_name = "p{}".format((i + 1))
-#     priority = random.randint(1, 4)
-#     arrival_time = random.randint(0, 10)
-#     burst_time = random.randint(1, 10)
-#     jobs.append([process_name, priority, arrival_time, burst_time, None, None, 0, burst_time])
- """
-jobs = [
-    ['p1', 2, 0, 11],
-    ['p2', 2, 5, 28],
-    ['p3', 3, 12, 2],
-    ['p4', 3, 2, 10],
-    ['p5', 4, 9, 16],
-]
-n = len(jobs)
-new_jobs = []
-for job in jobs:
-    new_jobs.append([] + job + [None, None, 0, job[-1], None])
+# initialize jobs
+for i in range(n):
+    process_name = "p{}".format((i + 1))
+    priority = random.randint(1, 4)
+    arrival_time = random.randint(0, 10)
+    burst_time = random.randint(1, 10)
+    jobs.append([process_name, priority, arrival_time, burst_time, None, None, 0, burst_time])
 
-jobs = new_jobs
+# jobs = [
+#     ['p1', 2, 0, 11],
+#     ['p2', 2, 5, 28],
+#     ['p3', 3, 12, 2],
+#     ['p4', 3, 2, 10],
+#     ['p5', 4, 9, 16],
+# ]
+# n = len(jobs)
+# new_jobs = []
+# for job in jobs:
+#     new_jobs.append([] + job + [None, None, 0, job[-1], None])
+
+# jobs = new_jobs
 
 def non_preemptive(jobs):
     # work the jobs
@@ -90,7 +92,7 @@ def preemptive(jobs):
         else:
             if arrived:
                 next_time = current_time + arrived[0][7]
-            else: return finished
+            else: break
         
         start = current_time
         # current + burst
@@ -100,7 +102,6 @@ def preemptive(jobs):
         # burst time 
         if next_time < finish:
             processed_time = next_time - current_time
-
             arrived[0][7] -= processed_time
             current_time = next_time
         else: # next_time >= finish
@@ -118,6 +119,10 @@ def preemptive(jobs):
 
         arrived += [job for job in remaining if job[2] <= current_time]
         remaining = [job for job in jobs if job[2] > current_time]
+
+        if not arrived:
+            arrived += [job for job in remaining if job[2] <= next_time]
+            remaining = [job for job in jobs if job[2] > next_time]
 
         arrived.sort(key=lambda job: job[1])
         
@@ -146,8 +151,8 @@ def print_table(jobs):
         ))
 
 if __name__ == "__main__":
-    # jobs = non_preemptive(jobs)
-    jobs = preemptive(jobs)
+    jobs = non_preemptive(jobs)
+    # jobs = preemptive(jobs)
 
     print("RESULT")
     print_table(jobs)
